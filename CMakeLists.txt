@@ -48,10 +48,21 @@ add_library(
 target_include_directories(openarm_teleop_lib
                            PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+# Handle kdl_parser linking - check for target first, then fall back to library name
+if(TARGET kdl_parser::kdl_parser)
+  set(KDL_PARSER_LINK_TARGET kdl_parser::kdl_parser)
+elseif(TARGET kdl_parser)
+  set(KDL_PARSER_LINK_TARGET kdl_parser)
+elseif(kdl_parser_LIBRARIES)
+  set(KDL_PARSER_LINK_TARGET ${kdl_parser_LIBRARIES})
+else()
+  set(KDL_PARSER_LINK_TARGET kdl_parser)
+endif()
+
 target_link_libraries(
   openarm_teleop_lib
   PUBLIC OpenArmCAN::openarm_can Eigen3::Eigen ${orocos_kdl_LIBRARIES}
-         ${kdl_parser_LIBRARIES} urdfdom::urdfdom_model yaml-cpp::yaml-cpp)
+         ${KDL_PARSER_LINK_TARGET} urdfdom::urdfdom_model yaml-cpp::yaml-cpp)
 
 # -----------------------------
 # Executables
@@ -61,7 +72,7 @@ add_executable(comm_test control/openarm_communication_test.cpp)
 add_executable(unilateral_control control/openarm_unilateral_control.cpp)
 add_executable(bilateral_control control/openarm_bilateral_control.cpp)
 
-target_link_libraries(gravity_comp PRIVATE openarm_teleop_lib)
+target_link_libraries(gravity_comp PRIVATE openarm_teleop_lib ${KDL_PARSER_LINK_TARGET})
 target_link_libraries(comm_test PRIVATE openarm_teleop_lib)
-target_link_libraries(unilateral_control PRIVATE openarm_teleop_lib)
-target_link_libraries(bilateral_control PRIVATE openarm_teleop_lib)
+target_link_libraries(unilateral_control PRIVATE openarm_teleop_lib ${KDL_PARSER_LINK_TARGET})
+target_link_libraries(bilateral_control PRIVATE openarm_teleop_lib ${KDL_PARSER_LINK_TARGET})
