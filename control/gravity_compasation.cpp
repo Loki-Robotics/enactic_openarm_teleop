@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 
         std::cout << "=== Initializing Leader OpenArm ===" << std::endl;
         openarm::can::socket::OpenArm* openarm =
-            openarm_init::OpenArmInitializer::initialize_openarm(can_interface, true);
+            openarm_init::OpenArmInitializer::initialize_openarm(can_interface, false);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         auto start_time = std::chrono::high_resolution_clock::now();
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
                 auto total_time =
                     std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time)
                         .count();
-                double hz = (frame_count * 1000.0) / total_time;
+                double hz = (frame_count * 500.0) / total_time;
                 std::cout << "=== Loop Frequency: " << hz << " Hz ===" << std::endl;
                 last_hz_display = current_time;
             }
