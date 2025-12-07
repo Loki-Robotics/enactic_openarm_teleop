@@ -14,7 +14,7 @@ git remote add upstream https://github.com/enactic/openarm_teleop.git
 git fetch upstream
 git remote -v   # verify
 
-origin    git@github.com:Loki-Robotics/openarm_can.git
+origin    git@github.com:Loki-Robotics/enactic_openarm_teleop.git
 upstream  https://github.com/enactic/openarm_teleop.git
 ```
 
